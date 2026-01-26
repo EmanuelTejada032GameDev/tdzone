@@ -7,6 +7,10 @@ public class MultiAxisRotator : MonoBehaviour
     [SerializeField] private RotationAxisConfig yAxis;
     [SerializeField] private RotationAxisConfig zAxis;
 
+    public RotationAxisConfig XAxis => xAxis;
+    public RotationAxisConfig YAxis => yAxis;
+    public RotationAxisConfig ZAxis => zAxis;
+
     [Header("Rotation Mode")]
     [SerializeField] private RotationMode rotationMode = RotationMode.TargetTracking;
 

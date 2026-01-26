@@ -46,10 +46,11 @@ public class HealthBarUI : MonoBehaviour
     {
         if (!smoothTransition) return;
 
+        // Use unscaledDeltaTime so UI still updates when game is paused
         fillImage.fillAmount = Mathf.Lerp(
             fillImage.fillAmount,
             targetFillAmount,
-            Time.deltaTime * smoothSpeed
+            Time.unscaledDeltaTime * smoothSpeed
         );
     }
 
