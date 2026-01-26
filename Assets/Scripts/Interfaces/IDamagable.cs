@@ -1,0 +1,8 @@
+using UnityEngine;
+
+public interface IDamagable
+{
+    void TakeDamage(int amount);
+    void Heal(int amount);
+    void Die();
+}
