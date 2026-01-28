@@ -29,6 +29,15 @@ public class Tower : MonoBehaviour
     [SerializeField] private float fireCooldown = 1f;
     [SerializeField] private bool shootCannonsInOrder = false;
 
+    [Header("Control Mode")]
+    [SerializeField] private bool isManualMode = false;
+    [SerializeField] private bool yAxisRotationOnly = true;
+
+    [Header("Manual Mode Settings")]
+    [SerializeField] private KeyCode fireKey = KeyCode.Mouse0;
+    [SerializeField] private LayerMask groundLayer;
+    private Camera mainCamera;
+
     [Header("Gizmo Visualization")]
     [SerializeField] private bool showDetectionRange = true;
     [SerializeField] private bool showShootingRange = true;
@@ -50,6 +59,8 @@ public class Tower : MonoBehaviour
         {
             cannons = cannons.OrderBy(c => c.fireOrder).ToArray();
         }
+
+        mainCamera = Camera.main;
     }
 
     private void OnEnable()
@@ -80,6 +91,81 @@ public class Tower : MonoBehaviour
             HealthSystem?.TakeDamage(2);
         }
 
+        if (isManualMode)
+        {
+            HandleManualMode();
+        }
+        else
+        {
+            HandleAutonomousMode();
+        }
+    }
+
+    private void HandleManualMode()
+    {
+        // Aim at mouse position in world
+        HandleMouseAiming();
+
+        // Fire on mouse click
+        if (Input.GetKey(fireKey))
+        {
+            FireCannonsManual();
+        }
+    }
+
+    private void HandleMouseAiming()
+    {
+        if (mainCamera == null) return;
+
+        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+
+        // Try to hit ground layer first
+        if (Physics.Raycast(ray, out RaycastHit hit, 1000f, groundLayer))
+        {
+            AimAtPosition(hit.point);
+        }
+        else
+        {
+            // Fallback: create a plane at tower's Y level
+            Plane groundPlane = new Plane(Vector3.up, new Vector3(0f, transform.position.y, 0f));
+            if (groundPlane.Raycast(ray, out float distance))
+            {
+                Vector3 worldPoint = ray.GetPoint(distance);
+                AimAtPosition(worldPoint);
+            }
+        }
+    }
+
+    private void AimAtPosition(Vector3 worldPosition)
+    {
+        Vector3 direction = worldPosition - transform.position;
+
+        // Base rotator - horizontal rotation
+        baseRotator.RotateTowards(direction);
+
+        // Cannon pitch only if NOT in Y-axis-only mode
+        if (!yAxisRotationOnly)
+        {
+            Vector3 cannonDirection = worldPosition - cannonRotator.transform.position;
+            cannonRotator.RotateTowards(cannonDirection);
+        }
+    }
+
+    private void FireCannonsManual()
+    {
+        fireTimer -= Time.deltaTime;
+        if (fireTimer > 0f) return;
+
+        foreach (var cannon in cannons)
+        {
+            cannon.TryFire(null);
+        }
+
+        fireTimer = fireCooldown;
+    }
+
+    private void HandleAutonomousMode()
+    {
         if (currentTarget == null)
         {
             Collider[] enemiesInRadius = Physics.OverlapSphere(
@@ -149,8 +235,12 @@ public class Tower : MonoBehaviour
         Vector3 baseDirection = currentTarget.position - transform.position;
         baseRotator.RotateTowards(baseDirection);
 
-        Vector3 cannonDirection = currentTarget.position - cannonRotator.transform.position;
-        cannonRotator.RotateTowards(cannonDirection);
+        // Cannon pitch only if NOT in Y-axis-only mode
+        if (!yAxisRotationOnly)
+        {
+            Vector3 cannonDirection = currentTarget.position - cannonRotator.transform.position;
+            cannonRotator.RotateTowards(cannonDirection);
+        }
     }
 
     private bool IsTargetLocked()
@@ -158,9 +248,26 @@ public class Tower : MonoBehaviour
         if (!currentTarget) return false;
 
         Vector3 toTarget = (currentTarget.position - cannonRotator.transform.position).normalized;
-        float angle = Vector3.Angle(cannonRotator.transform.forward, toTarget);
 
-        return angle <= aimLockAngle;
+        if (yAxisRotationOnly)
+        {
+            // Only check horizontal angle when Y-axis only mode
+            Vector3 flatForward = cannonRotator.transform.forward;
+            flatForward.y = 0f;
+            flatForward.Normalize();
+
+            Vector3 flatToTarget = toTarget;
+            flatToTarget.y = 0f;
+            flatToTarget.Normalize();
+
+            float angle = Vector3.Angle(flatForward, flatToTarget);
+            return angle <= aimLockAngle;
+        }
+        else
+        {
+            float angle = Vector3.Angle(cannonRotator.transform.forward, toTarget);
+            return angle <= aimLockAngle;
+        }
     }
 
     //Complete shooting range check
