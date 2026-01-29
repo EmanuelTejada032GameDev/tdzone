@@ -8,7 +8,6 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float speed = 20f;
     [SerializeField] private float lifetime = 5f;
 
-    // Damage is set by the Cannon via Initialize() - not configurable here
     private int damage;
 
     [Header("Homing Settings")]

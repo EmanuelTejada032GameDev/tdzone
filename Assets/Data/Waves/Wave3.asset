@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 638aab2f2ac032b4e8383626181964d5, type: 3}
+  m_Name: Wave3
+  m_EditorClassIdentifier: 
+  waveName: Wave 3
+  waveNumber: 3
+  enemyGroups:
+  - enemyPrefab: {fileID: 6910571461433197472, guid: 0c01d63d6046e2b46bbb6087404e569a, type: 3}
+    count: 6
+    spawnInterval: 0.1
+    groupDelay: 2
+  - enemyPrefab: {fileID: 6910571461433197472, guid: 0c01d63d6046e2b46bbb6087404e569a, type: 3}
+    count: 14
+    spawnInterval: 0.1
+    groupDelay: 5
+  - enemyPrefab: {fileID: 6910571461433197472, guid: 0c01d63d6046e2b46bbb6087404e569a, type: 3}
+    count: 25
+    spawnInterval: 0.1
+    groupDelay: 7
+  waveStartDelay: 2
+  waveCompleteGoldBonus: 100
+  waveCompleteScoreBonus: 750
