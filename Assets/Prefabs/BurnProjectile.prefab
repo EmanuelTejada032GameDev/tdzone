@@ -216,7 +216,7 @@ GameObject:
   - component: {fileID: 9087860681913284848}
   - component: {fileID: 7207716887778017465}
   m_Layer: 0
-  m_Name: Projectile
+  m_Name: BurnProjectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -258,9 +258,9 @@ MonoBehaviour:
   arcHeight: 2
   impactEffect: {fileID: 0}
   trail: {fileID: 5825459279658941641}
-  statusEffectType: 0
-  statusEffectDuration: 2
-  statusEffectStrength: 1
+  statusEffectType: 1
+  statusEffectDuration: 10
+  statusEffectStrength: 2
 --- !u!54 &9087860681913284848
 Rigidbody:
   m_ObjectHideFlags: 0

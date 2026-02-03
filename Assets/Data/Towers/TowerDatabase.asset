@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64abefba618e72540b90a28f6195ce4a, type: 3}
+  m_Name: TowerDatabase
+  m_EditorClassIdentifier: 
+  baseTower: {fileID: 11400000, guid: ca2deba5b34235b45ab353ef1ebf8d5f, type: 2}
+  unlockableTowers:
+  - {fileID: 11400000, guid: 9186650a73680474a9d1f4547f2957d4, type: 2}
+  - {fileID: 11400000, guid: b0bebe5682e11a54bbd9b8020584110f, type: 2}
+  - {fileID: 11400000, guid: 0c85eac6b40baab4c933167f18cf05da, type: 2}

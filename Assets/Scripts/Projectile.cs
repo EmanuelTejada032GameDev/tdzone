@@ -21,6 +21,11 @@ public class Projectile : MonoBehaviour
     [SerializeField] private GameObject impactEffect;
     [SerializeField] private TrailRenderer trail;
 
+    [Header("Status Effect")]
+    [SerializeField] private StatusEffectType statusEffectType = StatusEffectType.None;
+    [SerializeField] private float statusEffectDuration = 2f;
+    [SerializeField] private float statusEffectStrength = 1f;
+
     private Transform target;
     private Vector3 targetPosition;
     private float homingTimer;
@@ -88,6 +93,27 @@ public class Projectile : MonoBehaviour
         this.damage = damage;
 
         transform.LookAt(targetPosition);
+    }
+
+    /// <summary>
+    /// Initialize with status effect parameters
+    /// </summary>
+    public void Initialize(Transform target, int damage, StatusEffectType effectType, float effectDuration, float effectStrength)
+    {
+        Initialize(target, damage);
+        this.statusEffectType = effectType;
+        this.statusEffectDuration = effectDuration;
+        this.statusEffectStrength = effectStrength;
+    }
+
+    /// <summary>
+    /// Set status effect parameters (can be called after Initialize)
+    /// </summary>
+    public void SetStatusEffect(StatusEffectType effectType, float duration, float strength)
+    {
+        this.statusEffectType = effectType;
+        this.statusEffectDuration = duration;
+        this.statusEffectStrength = strength;
     }
 
     private void MoveStraight()
@@ -170,6 +196,16 @@ public class Projectile : MonoBehaviour
             if (health != null)
             {
                 health.TakeDamage(damage);
+            }
+
+            // Apply status effect if any
+            if (statusEffectType != StatusEffectType.None)
+            {
+                StatusEffectManager effectManager = hitCollider.GetComponent<StatusEffectManager>();
+                if (effectManager != null)
+                {
+                    effectManager.ApplyEffect(statusEffectType, statusEffectDuration, statusEffectStrength);
+                }
             }
 
             // Invoke hit event

@@ -9,6 +9,35 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float rotationSpeed = 5f;
     [SerializeField] private float stoppingDistance = 2f;
 
+    // Runtime speed (can be modified by effects)
+    private float currentMoveSpeed;
+
+    /// <summary>
+    /// Current movement speed (may be modified by status effects)
+    /// </summary>
+    public float MoveSpeed => currentMoveSpeed;
+
+    /// <summary>
+    /// Base movement speed (unmodified)
+    /// </summary>
+    public float BaseMoveSpeed => moveSpeed;
+
+    /// <summary>
+    /// Set movement speed (used by status effects)
+    /// </summary>
+    public void SetMoveSpeed(float speed)
+    {
+        currentMoveSpeed = Mathf.Max(0f, speed);
+    }
+
+    /// <summary>
+    /// Reset speed to base value
+    /// </summary>
+    public void ResetMoveSpeed()
+    {
+        currentMoveSpeed = moveSpeed;
+    }
+
     [Header("Combat")]
     [SerializeField] private int damage = 2;
     [SerializeField] private float attackCooldown = 1f;
@@ -29,6 +58,7 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
+        currentMoveSpeed = moveSpeed;
     }
 
     private void Start()
@@ -90,7 +120,7 @@ public class Enemy : MonoBehaviour
         Vector3 direction = (targetPosition - transform.position).normalized;
 
         // Move towards tower (horizontal only)
-        transform.position += direction * moveSpeed * Time.deltaTime;
+        transform.position += direction * currentMoveSpeed * Time.deltaTime;
 
         // Rotate to face tower
         if (direction != Vector3.zero)
