@@ -32,6 +32,8 @@ public class HealthBarUI : MonoBehaviour
 
     private void OnEnable()
     {
+        if (healthSystem == null) return;
+
         healthSystem.OnDamaged += OnHealthChanged;
         healthSystem.OnHealed += OnHealthChanged;
         healthSystem.OnDied += OnDied;
@@ -39,6 +41,7 @@ public class HealthBarUI : MonoBehaviour
 
     private void OnDisable()
     {
+        if (healthSystem == null) return;
         healthSystem.OnDamaged -= OnHealthChanged;
         healthSystem.OnHealed -= OnHealthChanged;
         healthSystem.OnDied -= OnDied;

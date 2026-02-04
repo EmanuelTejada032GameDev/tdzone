@@ -318,7 +318,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216bcdd723a678749b98d8c450694e45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealthAmount: 1000
+  _maxHealthAmount: 1
 --- !u!114 &9183677886514107032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,7 +331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbfa30d004f3ccc41b6ef9df73dd7234, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
+  moveSpeed: 1.2
   rotationSpeed: 5
   stoppingDistance: 2
   damage: 2

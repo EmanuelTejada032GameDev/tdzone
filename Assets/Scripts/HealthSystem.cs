@@ -51,7 +51,7 @@ public class HealthSystem : MonoBehaviour, IDamagable
         _healthAmount = _maxHealthAmount;
         OnHealed?.Invoke(this, EventArgs.Empty);
     }
-
+    
     public void Die()
     {
         if(!IsDead) TakeDamage(_healthAmount);
