@@ -132,7 +132,6 @@ public class TowerVisualSwapper : MonoBehaviour
         }
         else
         {
-            Debug.Log($"TowerVisualSwapper: Found {currentFirePoints.Count} fire point(s) in '{currentVisual.name}'");
         }
     }
 
@@ -259,36 +258,8 @@ public class TowerVisualSwapper : MonoBehaviour
             ps.Play();
         }
 
-        // Example: Apply color tint to renderers
-        ApplyColorTint(towerData.projectileColor);
     }
 
-    /// <summary>
-    /// Apply a color tint to the current visual's renderers
-    /// </summary>
-    private void ApplyColorTint(Color color)
-    {
-        if (currentVisual == null)
-            return;
-
-        // Get all renderers
-        var renderers = currentVisual.GetComponentsInChildren<Renderer>();
-
-        foreach (var renderer in renderers)
-        {
-            // Create material instance to avoid modifying shared materials
-            var materials = renderer.materials;
-            foreach (var mat in materials)
-            {
-                // Check if material has emission property
-                if (mat.HasProperty("_EmissionColor"))
-                {
-                    mat.SetColor("_EmissionColor", color * 0.5f);
-                    mat.EnableKeyword("_EMISSION");
-                }
-            }
-        }
-    }
 
     /// <summary>
     /// Get the current visual GameObject

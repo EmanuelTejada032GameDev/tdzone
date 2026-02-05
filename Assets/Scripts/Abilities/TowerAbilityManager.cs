@@ -64,16 +64,17 @@ public class TowerAbilityManager : MonoBehaviour
             baseTowerData = towerDatabase.baseTower;
         }
         currentTowerData = baseTowerData;
-    }
 
-    private void Start()
-    {
         // Initialize abilities from database if not manually configured
+        // Done in Awake so abilities are ready before UI Start() methods run
         if (abilities.Count == 0 && towerDatabase != null)
         {
             InitializeAbilitiesFromDatabase();
         }
+    }
 
+    private void Start()
+    {
         // Subscribe to ability events
         foreach (var ability in abilities)
         {
@@ -104,7 +105,6 @@ public class TowerAbilityManager : MonoBehaviour
         currentTowerData = baseTowerData;
         ApplyCannonConfiguration(baseTowerData);
 
-        Debug.Log($"TowerAbilityManager: Applied base tower config '{baseTowerData.towerName}'");
     }
 
     /// <summary>
@@ -124,7 +124,6 @@ public class TowerAbilityManager : MonoBehaviour
             if (cannons[i] != null)
             {
                 cannons[i].SetFirePoint(firePoints[i]);
-                Debug.Log($"TowerAbilityManager: Assigned fire point '{firePoints[i].name}' to cannon {i}");
             }
         }
 
@@ -216,14 +215,14 @@ public class TowerAbilityManager : MonoBehaviour
         // Can't activate if another ability is active
         if (activeAbility != null)
         {
-            Debug.Log($"Cannot activate {ability.TowerData.towerName}: another ability is active");
+            //Debug.Log($"Cannot activate {ability.TowerData.towerName}: another ability is active");
             return false;
         }
 
         // Try to activate
         if (!ability.TryActivate())
         {
-            Debug.Log($"Cannot activate {ability.TowerData.towerName}: not ready (State: {ability.State})");
+            //Debug.Log($"Cannot activate {ability.TowerData.towerName}: not ready (State: {ability.State})");
             return false;
         }
 
@@ -285,7 +284,6 @@ public class TowerAbilityManager : MonoBehaviour
 
         OnTowerTypeChanged?.Invoke(towerData);
 
-        Debug.Log($"Tower transformed to: {towerData.towerName}");
     }
 
     /// <summary>
@@ -306,7 +304,6 @@ public class TowerAbilityManager : MonoBehaviour
 
         OnTowerTypeChanged?.Invoke(baseTowerData);
 
-        Debug.Log("Tower reverted to base type");
     }
 
     /// <summary>
@@ -387,7 +384,6 @@ public class TowerAbilityManager : MonoBehaviour
     private void HandleAbilityCooldownComplete(TowerAbility ability)
     {
         OnAbilityCooldownComplete?.Invoke(ability);
-        Debug.Log($"{ability.TowerData.towerName} is ready!");
     }
 
     /// <summary>
