@@ -31,6 +31,7 @@ public class TowerAbilityManager : MonoBehaviour
     public event Action<TowerAbility> OnAbilityActivated;
     public event Action<TowerAbility> OnAbilityDeactivated;
     public event Action<TowerAbility> OnAbilityCooldownComplete;
+    public event Action<TowerAbility> OnAbilityUnlocked;
 
     // Properties
     public TowerAbility ActiveAbility => activeAbility;
@@ -159,6 +160,12 @@ public class TowerAbilityManager : MonoBehaviour
         {
             visualSwapper.OnFirePointsChanged -= HandleFirePointsChanged;
         }
+
+        // Unsubscribe from progression manager
+        if (PlayerProgressionManager.Instance != null)
+        {
+            PlayerProgressionManager.Instance.OnTowerUnlocked -= HandleTowerUnlocked;
+        }
     }
 
     /// <summary>
@@ -179,10 +186,41 @@ public class TowerAbilityManager : MonoBehaviour
             KeyCode key = i < defaultKeys.Length ? defaultKeys[i] : KeyCode.None;
             var ability = new TowerAbility(towerData, key);
 
-            // Start unlocked for now (unlock system will be added later)
-            ability.Unlock();
+            // Start locked - check PlayerProgressionManager for unlock status
+            ability.Lock();
+
+            // Check if already unlocked in progression data
+            if (PlayerProgressionManager.Instance != null &&
+                PlayerProgressionManager.Instance.IsTowerUnlocked(towerData.towerId))
+            {
+                ability.Unlock();
+            }
 
             abilities.Add(ability);
+        }
+
+        // Subscribe to unlock events for runtime unlocks
+        if (PlayerProgressionManager.Instance != null)
+        {
+            PlayerProgressionManager.Instance.OnTowerUnlocked += HandleTowerUnlocked;
+        }
+    }
+
+    /// <summary>
+    /// Handle tower unlock from progression system
+    /// </summary>
+    private void HandleTowerUnlocked(object sender, string towerId)
+    {
+        // Find the ability for this tower and unlock it
+        foreach (var ability in abilities)
+        {
+            if (ability.TowerData != null && ability.TowerData.towerId == towerId)
+            {
+                ability.Unlock();
+                OnAbilityUnlocked?.Invoke(ability);
+                Debug.Log($"[TowerAbilityManager] Ability unlocked via progression: {ability.TowerData.towerName}");
+                break;
+            }
         }
     }
 

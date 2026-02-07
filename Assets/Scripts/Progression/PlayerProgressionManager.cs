@@ -323,6 +323,12 @@ public class PlayerProgressionManager : MonoBehaviour
 
     #region Debug
 
+    [ContextMenu("Debug: reset currency")]
+    private void DebugResetCurrency()
+    {
+        SpendCurrency(progressionData.currency);
+    }
+
     [ContextMenu("Debug: Add 100 Currency")]
     private void DebugAdd100Currency()
     {
@@ -333,6 +339,18 @@ public class PlayerProgressionManager : MonoBehaviour
     private void DebugAdd1000Currency()
     {
         AddCurrency(1000);
+    }
+
+    [ContextMenu("Debug: Add 5000 Currency")]
+    private void DebugAdd5000Currency()
+    {
+        AddCurrency(5000);
+    }
+
+    [ContextMenu("Debug: Add 10000 Currency")]
+    private void DebugAdd10000Currency()
+    {
+        AddCurrency(10000);
     }
 
     [ContextMenu("Debug: Log Status")]

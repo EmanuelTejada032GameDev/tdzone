@@ -34,6 +34,7 @@ public class AbilityBarUI : MonoBehaviour
         // Subscribe to manager events
         abilityManager.OnAbilityActivated += Manager_OnAbilityActivated;
         abilityManager.OnAbilityDeactivated += Manager_OnAbilityDeactivated;
+        abilityManager.OnAbilityUnlocked += Manager_OnAbilityUnlocked;
 
         if (autoPopulateOnStart)
         {
@@ -47,6 +48,7 @@ public class AbilityBarUI : MonoBehaviour
         {
             abilityManager.OnAbilityActivated -= Manager_OnAbilityActivated;
             abilityManager.OnAbilityDeactivated -= Manager_OnAbilityDeactivated;
+            abilityManager.OnAbilityUnlocked -= Manager_OnAbilityUnlocked;
         }
     }
 
@@ -147,6 +149,12 @@ public class AbilityBarUI : MonoBehaviour
     private void Manager_OnAbilityDeactivated(TowerAbility ability)
     {
         // Visual feedback handled by individual AbilitySlotUI
+    }
+
+    private void Manager_OnAbilityUnlocked(TowerAbility ability)
+    {
+        // Refresh slots to show newly unlocked ability
+        RefreshSlots();
     }
 
     private void Slot_OnClicked(AbilitySlotUI slot)
