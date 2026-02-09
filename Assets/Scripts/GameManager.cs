@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Game State")]
     [SerializeField] private bool isGameOver;
+    [SerializeField] private bool isVictory;
 
     [Header("Stats")]
     [SerializeField] private int playerGold = 100;
@@ -17,10 +18,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Tower tower;
 
     public event EventHandler OnGameOver;
+    public event EventHandler OnVictory;
     public event EventHandler<int> OnGoldChanged;
     public event EventHandler<int> OnScoreChanged;
 
     public bool IsGameOver => isGameOver;
+    public bool IsVictory => isVictory;
     public int PlayerGold => playerGold;
     public int PlayerScore => playerScore;
 
@@ -91,6 +94,7 @@ public class GameManager : MonoBehaviour
 
     private void WaveSpawner_OnAllWavesCompleted(object sender, System.EventArgs e)
     {
+        Victory();
     }
 
     private void TowerHealth_OnDied(object sender, EventArgs e)
@@ -114,9 +118,20 @@ public class GameManager : MonoBehaviour
         if (isGameOver) return;
 
         isGameOver = true;
-        Time.timeScale = 0f; // Pause game
+        Time.timeScale = 0f;
 
         OnGameOver?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Victory()
+    {
+        if (isGameOver) return;
+
+        isGameOver = true;
+        isVictory = true;
+        Time.timeScale = 0f;
+
+        OnVictory?.Invoke(this, EventArgs.Empty);
     }
 
     public void AddGold(int amount)
@@ -133,9 +148,6 @@ public class GameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        Time.timeScale = 1f;
-        UnityEngine.SceneManagement.SceneManager.LoadScene(
-            UnityEngine.SceneManagement.SceneManager.GetActiveScene().name
-        );
+        SceneLoader.LoadGameScene();
     }
 }

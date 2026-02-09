@@ -16,8 +16,8 @@ MonoBehaviour:
   waveNumber: 1
   enemyGroups:
   - enemyPrefab: {fileID: 6910571461433197472, guid: 0c01d63d6046e2b46bbb6087404e569a, type: 3}
-    count: 1000
-    spawnInterval: 2
+    count: 10
+    spawnInterval: 1
     groupDelay: 0
   waveStartDelay: 0
   waveCompleteGoldBonus: 50

@@ -27,6 +27,7 @@ public class UnlockManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
 
         // Initialize tower database
         if (towerDatabase != null)

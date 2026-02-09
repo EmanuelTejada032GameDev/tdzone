@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 
 /// <summary>
@@ -23,6 +24,8 @@ public class PlayerProgressionManager : MonoBehaviour
     public event EventHandler<SkillPurchasedEventArgs> OnSkillPurchased;
     public event EventHandler<RunEndEventArgs> OnRunEnd;
 
+    private bool hasCollectedRunGold;
+
     // Properties
     public int Currency => progressionData?.currency ?? 0;
     public PlayerProgressionData Data => progressionData;
@@ -44,12 +47,30 @@ public class PlayerProgressionManager : MonoBehaviour
 
     private void Start()
     {
-        SubscribeToGameEvents();
+        // Subscribe to scene load for re-subscribing to scene-local managers
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        // Subscribe to static events (persist across scenes)
+        WaveSpawner.OnAllWavesCompleted += OnRunVictory;
+
+        // Try initial subscription if GameManager already exists
+        SubscribeToGameManager();
     }
 
     private void OnDestroy()
     {
-        UnsubscribeFromGameEvents();
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        WaveSpawner.OnAllWavesCompleted -= OnRunVictory;
+        UnsubscribeFromGameManager();
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Reset run state for new scene
+        hasCollectedRunGold = false;
+
+        // Re-subscribe to scene-local managers (new GameManager instance)
+        SubscribeToGameManager();
     }
 
     private void LoadOrCreateData()
@@ -67,23 +88,22 @@ public class PlayerProgressionManager : MonoBehaviour
         }
     }
 
-    private void SubscribeToGameEvents()
+    private void SubscribeToGameManager()
     {
-        // Subscribe to run end events only
         if (GameManager.Instance != null)
         {
+            // Unsubscribe first to avoid double-subscription
+            GameManager.Instance.OnGameOver -= OnGameOver;
             GameManager.Instance.OnGameOver += OnGameOver;
         }
-        WaveSpawner.OnAllWavesCompleted += OnRunVictory;
     }
 
-    private void UnsubscribeFromGameEvents()
+    private void UnsubscribeFromGameManager()
     {
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnGameOver -= OnGameOver;
         }
-        WaveSpawner.OnAllWavesCompleted -= OnRunVictory;
     }
 
     #region Currency
@@ -248,11 +268,15 @@ public class PlayerProgressionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Collect gold earned during the run and add to persistent currency
+    /// Collect gold earned during the run and add to persistent currency.
+    /// Guarded against double-collection (both OnGameOver and OnAllWavesCompleted could fire).
     /// </summary>
     private void CollectRunGold(bool isVictory)
     {
+        if (hasCollectedRunGold) return;
         if (GameManager.Instance == null) return;
+
+        hasCollectedRunGold = true;
 
         int earnedGold = GameManager.Instance.PlayerGold;
 
