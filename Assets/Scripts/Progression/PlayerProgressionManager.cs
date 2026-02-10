@@ -40,13 +40,13 @@ public class PlayerProgressionManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
-
-        // Initialize data
-        LoadOrCreateData();
     }
 
     private void Start()
     {
+        // Load save data here (not Awake) so SaveManager singleton is guaranteed to exist
+        LoadOrCreateData();
+
         // Subscribe to scene load for re-subscribing to scene-local managers
         SceneManager.sceneLoaded += OnSceneLoaded;
 
@@ -75,8 +75,23 @@ public class PlayerProgressionManager : MonoBehaviour
 
     private void LoadOrCreateData()
     {
-        // TODO: Load from SaveManager when implemented
-        // For now, create fresh data or use existing (for testing in inspector)
+        // Try to load from SaveManager
+        if (SaveManager.Instance != null)
+        {
+            SaveData saveData = SaveManager.Instance.Load();
+            if (saveData?.progression != null)
+            {
+                progressionData = saveData.progression;
+
+                if (debugMode)
+                {
+                    Debug.Log($"[PlayerProgression] Loaded save — {progressionData.currency} currency");
+                }
+                return;
+            }
+        }
+
+        // No save found — create fresh data or use existing (for testing in inspector)
         if (progressionData == null)
         {
             progressionData = PlayerProgressionData.CreateDefault();
