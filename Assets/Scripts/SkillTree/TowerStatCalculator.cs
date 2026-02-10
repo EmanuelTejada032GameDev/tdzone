@@ -105,4 +105,12 @@ public static class TowerStatCalculator
     {
         return GetTotalValue(StatModifierType.CriticalChance);
     }
+
+    // --- Tower Health ---
+
+    public static float GetModifiedMaxHealth(float baseMaxHealth)
+    {
+        float bonus = GetTotalValue(StatModifierType.MaxHealth);
+        return baseMaxHealth * (1f + bonus / 100f);
+    }
 }

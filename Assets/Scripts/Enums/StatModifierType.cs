@@ -11,5 +11,6 @@ public enum StatModifierType
     ChainCount,
     ChainChance,
     Pierce,
-    CriticalChance
+    CriticalChance,
+    MaxHealth
 }
