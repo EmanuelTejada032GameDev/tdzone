@@ -21,8 +21,8 @@ public class WaveData : ScriptableObject
     [System.Serializable]
     public class EnemySpawnGroup
     {
-        [Tooltip("The enemy prefab to spawn")]
-        public GameObject enemyPrefab;
+        [Tooltip("The enemy data defining this enemy type")]
+        public EnemyDataSO enemyData;
 
         [Tooltip("How many of this enemy to spawn")]
         public int count = 5;

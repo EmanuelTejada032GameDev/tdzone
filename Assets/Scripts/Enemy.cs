@@ -4,10 +4,17 @@ using System;
 [RequireComponent(typeof(HealthSystem))]
 public class Enemy : MonoBehaviour
 {
-    [Header("Movement")]
-    [SerializeField] private float moveSpeed = 3f;
-    [SerializeField] private float rotationSpeed = 5f;
-    [SerializeField] private float stoppingDistance = 2f;
+    [Header("Data")]
+    [SerializeField] private EnemyDataSO enemyData;
+
+    // Runtime stats (copied from SO on Awake, can be modified by effects)
+    private float moveSpeed;
+    private float rotationSpeed;
+    private float stoppingDistance;
+    private int damage;
+    private float attackCooldown;
+    private int goldReward;
+    private int scoreReward;
 
     // Runtime speed (can be modified by effects)
     private float currentMoveSpeed;
@@ -21,6 +28,11 @@ public class Enemy : MonoBehaviour
     /// Base movement speed (unmodified)
     /// </summary>
     public float BaseMoveSpeed => moveSpeed;
+
+    /// <summary>
+    /// The EnemyDataSO driving this enemy (read-only)
+    /// </summary>
+    public EnemyDataSO EnemyData => enemyData;
 
     /// <summary>
     /// Set movement speed (used by status effects)
@@ -38,14 +50,6 @@ public class Enemy : MonoBehaviour
         currentMoveSpeed = moveSpeed;
     }
 
-    [Header("Combat")]
-    [SerializeField] private int damage = 2;
-    [SerializeField] private float attackCooldown = 1f;
-
-    [Header("Rewards")]
-    [SerializeField] private int goldReward = 10;
-    [SerializeField] private int scoreReward = 100;
-
     private Transform towerTransform;
     private Tower tower;
     private HealthSystem healthSystem;
@@ -58,7 +62,38 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
+        ApplyData();
+    }
+
+    /// <summary>
+    /// Initialize this enemy with a specific EnemyDataSO at runtime (e.g. from spawner).
+    /// Call before Start() or immediately after Instantiate().
+    /// </summary>
+    public void Initialize(EnemyDataSO data)
+    {
+        enemyData = data;
+        ApplyData();
+    }
+
+    private void ApplyData()
+    {
+        if (enemyData == null) return;
+
+        moveSpeed = enemyData.moveSpeed;
+        rotationSpeed = enemyData.rotationSpeed;
+        stoppingDistance = enemyData.stoppingDistance;
+        damage = enemyData.damage;
+        attackCooldown = enemyData.attackCooldown;
+        goldReward = enemyData.goldReward;
+        scoreReward = enemyData.scoreReward;
+
         currentMoveSpeed = moveSpeed;
+
+        // Set health from data
+        if (healthSystem != null)
+        {
+            healthSystem.Initialize(enemyData.maxHealth);
+        }
     }
 
     private void Start()

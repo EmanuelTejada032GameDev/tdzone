@@ -3626,6 +3626,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waves:
   - {fileID: 11400000, guid: 4a32ff2d4f07fdd43b6fd719b470fbc8, type: 2}
+  - {fileID: 11400000, guid: 7fd6fdcb4c1b11c47864b58c7193a693, type: 2}
+  - {fileID: 11400000, guid: de30cd3eb541b6d42aff448219497b68, type: 2}
   autoStartFirstWave: 1
   timeBetweenWaves: 5
   spawnPoints:

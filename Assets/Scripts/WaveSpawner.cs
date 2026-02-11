@@ -118,7 +118,7 @@ public class WaveSpawner : MonoBehaviour
             // Spawn enemies in this group
             for (int i = 0; i < group.count; i++)
             {
-                SpawnEnemy(group.enemyPrefab);
+                SpawnEnemy(group.enemyData);
                 enemiesSpawnedThisWave++;
 
                 // Wait before spawning next enemy
@@ -173,11 +173,11 @@ public class WaveSpawner : MonoBehaviour
         }
     }
 
-    private void SpawnEnemy(GameObject enemyPrefab)
+    private void SpawnEnemy(EnemyDataSO enemyData)
     {
-        if (enemyPrefab == null)
+        if (enemyData == null || enemyData.enemyPrefab == null)
         {
-            Debug.LogWarning("WaveSpawner: Enemy prefab is null!");
+            Debug.LogWarning("WaveSpawner: Enemy data or prefab is null!");
             return;
         }
 
@@ -188,11 +188,16 @@ public class WaveSpawner : MonoBehaviour
             return;
         }
 
-        // Spawn enemy at spawn point
-        GameObject enemy = Instantiate(enemyPrefab, spawnPoint.Position, spawnPoint.Rotation);
-        activeEnemies.Add(enemy);
-        enemiesAlive++;
+        // Spawn enemy at spawn point and initialize with data
+        GameObject enemyObj = Instantiate(enemyData.enemyPrefab, spawnPoint.Position, spawnPoint.Rotation);
+        Enemy enemy = enemyObj.GetComponent<Enemy>();
+        if (enemy != null)
+        {
+            enemy.Initialize(enemyData);
+        }
 
+        activeEnemies.Add(enemyObj);
+        enemiesAlive++;
     }
 
     private SpawnPoint GetNextSpawnPoint()

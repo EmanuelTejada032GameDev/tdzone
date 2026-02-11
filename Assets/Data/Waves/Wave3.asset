@@ -15,15 +15,15 @@ MonoBehaviour:
   waveName: Wave 3
   waveNumber: 3
   enemyGroups:
-  - enemyPrefab: {fileID: 6910571461433197472, guid: 0c01d63d6046e2b46bbb6087404e569a, type: 3}
-    count: 6
+  - enemyData: {fileID: 11400000, guid: 3cdf8d1aa454a8d498baacc4550bcd16, type: 2}
+    count: 8
     spawnInterval: 0.1
     groupDelay: 2
-  - enemyPrefab: {fileID: 6910571461433197472, guid: 0c01d63d6046e2b46bbb6087404e569a, type: 3}
+  - enemyData: {fileID: 11400000, guid: 3cdf8d1aa454a8d498baacc4550bcd16, type: 2}
     count: 14
     spawnInterval: 0.1
     groupDelay: 5
-  - enemyPrefab: {fileID: 6910571461433197472, guid: 0c01d63d6046e2b46bbb6087404e569a, type: 3}
+  - enemyData: {fileID: 11400000, guid: 3cdf8d1aa454a8d498baacc4550bcd16, type: 2}
     count: 25
     spawnInterval: 0.1
     groupDelay: 7

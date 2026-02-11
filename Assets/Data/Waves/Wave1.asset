@@ -15,10 +15,14 @@ MonoBehaviour:
   waveName: Wave 1
   waveNumber: 1
   enemyGroups:
-  - enemyPrefab: {fileID: 6910571461433197472, guid: 0c01d63d6046e2b46bbb6087404e569a, type: 3}
+  - enemyData: {fileID: 11400000, guid: 3cdf8d1aa454a8d498baacc4550bcd16, type: 2}
     count: 10
     spawnInterval: 1
     groupDelay: 0
-  waveStartDelay: 0
+  - enemyData: {fileID: 11400000, guid: 967463463dc1d794ca4ad223c5349921, type: 2}
+    count: 2
+    spawnInterval: 3
+    groupDelay: 0
+  waveStartDelay: 4
   waveCompleteGoldBonus: 50
   waveCompleteScoreBonus: 500
