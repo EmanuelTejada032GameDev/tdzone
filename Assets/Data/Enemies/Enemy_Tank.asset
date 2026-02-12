@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71ae797e5f1d9c24890b326c8249f0ab, type: 3}
-  m_Name: Enemy_Strong
+  m_Name: Enemy_Tank
   m_EditorClassIdentifier: 
-  enemyId: 2
-  enemyName: Strong Enemy
+  enemyId: 3
+  enemyName: Tank
   icon: {fileID: 21300000, guid: 80043b82646b42642ad5f8c726b04314, type: 3}
   enemyPrefab: {fileID: 6910571461433197472, guid: caae359db5b2afc41b21eb84cbe9accd, type: 3}
-  moveSpeed: 2
-  rotationSpeed: 5
-  stoppingDistance: 1
-  maxHealth: 50
-  damage: 6
-  attackCooldown: 3
-  goldReward: 50
-  scoreReward: 250
+  moveSpeed: 1.5
+  rotationSpeed: 3
+  stoppingDistance: 2
+  maxHealth: 80
+  damage: 15
+  attackCooldown: 1
+  goldReward: 20
+  scoreReward: 200

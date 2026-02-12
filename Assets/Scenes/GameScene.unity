@@ -590,7 +590,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireOrder: 1
   fireDelay: 0.4
-  cooldown: 1
+  cooldown: 0
   projectilePrefab: {fileID: 6302814833152823475, guid: ba6ae69a84a33b64882d1eba2339cdde, type: 3}
   projectileDamage: 2
   projectileSpeed: 20
@@ -811,8 +811,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.48631406, y: 0.51359475, z: -0.49306872, w: 0.5065592}
-  m_LocalPosition: {x: -2.3077884, y: 63.073887, z: 1.375864}
+  m_LocalRotation: {x: 0.0014477043, y: 0.7246901, z: -0.68907183, w: 0.001522303}
+  m_LocalPosition: {x: 0.06456475, y: 38.763153, z: 0.8876308}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2830,7 +2830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 216bcdd723a678749b98d8c450694e45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealthAmount: 8
+  _maxHealthAmount: 100
 --- !u!114 &1177574199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2849,12 +2849,12 @@ MonoBehaviour:
   aimLockAngle: 5
   isTargetLocked: 0
   isTargetInShootingRange: 0
-  detectionRadius: 29
+  detectionRadius: 15
   minShootingRange: 2
-  maxShootingRange: 27
+  maxShootingRange: 15
   HealthSystem: {fileID: 0}
   cannons: []
-  fireCooldown: 1
+  fireCooldown: 0.5
   shootCannonsInOrder: 0
   isManualMode: 0
   yAxisRotationOnly: 1
@@ -3109,7 +3109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fireOrder: 2
   fireDelay: 0.4
-  cooldown: 1
+  cooldown: 0
   projectilePrefab: {fileID: 6302814833152823475, guid: ba6ae69a84a33b64882d1eba2339cdde, type: 3}
   projectileDamage: 2
   projectileSpeed: 20
@@ -3628,6 +3628,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4a32ff2d4f07fdd43b6fd719b470fbc8, type: 2}
   - {fileID: 11400000, guid: 7fd6fdcb4c1b11c47864b58c7193a693, type: 2}
   - {fileID: 11400000, guid: de30cd3eb541b6d42aff448219497b68, type: 2}
+  - {fileID: 11400000, guid: 1d3f1c22dc0209540a70932bf38bc125, type: 2}
+  - {fileID: 11400000, guid: 14ef08ab0c7c7d54696578c8bea0a216, type: 2}
   autoStartFirstWave: 1
   timeBetweenWaves: 5
   spawnPoints:

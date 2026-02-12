@@ -18,7 +18,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 80043b82646b42642ad5f8c726b04314, type: 3}
   towerType: 0
   damage: 10
-  fireRate: 0.2
+  fireRate: 1
   range: 15
   cannonCount: 1
   towerVisualPrefab: {fileID: 2675972904533289035, guid: 8e7075b98f9f42042be72b72311d1147, type: 3}
