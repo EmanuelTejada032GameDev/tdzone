@@ -20,17 +20,10 @@ public class TowerDataSO : ScriptableObject
     [Header("Visuals")]
     [Tooltip("Prefab to swap when this tower is active. If null, uses default tower visual.")]
     public GameObject towerVisualPrefab;
-    public GameObject projectilePrefab;
-    public Color projectileColor = Color.white;
-    [Tooltip("Optional muzzle effect override")]
-    public GameObject muzzleEffectPrefab;
 
-    [Header("Status Effect")]
-    public StatusEffectType statusEffect = StatusEffectType.None;
-    [Tooltip("Duration of the status effect in seconds")]
-    public float effectDuration = 2f;
-    [Tooltip("Strength of effect (damage for burn, slow % for slow, etc.)")]
-    public float effectStrength = 1f;
+    [Header("Projectile")]
+    [Tooltip("ProjectileDataSO for this tower type")]
+    public ProjectileDataSO projectileData;
 
     [Header("Ability Settings (for unlockable towers)")]
     [Tooltip("How long the ability lasts when activated")]

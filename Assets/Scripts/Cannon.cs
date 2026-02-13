@@ -9,21 +9,13 @@ public class Cannon : MonoBehaviour
     public float cooldown = 1f;
 
     [Header("Projectile")]
-    [SerializeField] private GameObject projectilePrefab;
+    [SerializeField] private ProjectileDataSO projectileData;
     [SerializeField] private int projectileDamage;
-    [SerializeField] private float projectileSpeed = 20f;
-
-    [Header("Status Effect")]
-    [SerializeField] private StatusEffectType statusEffectType = StatusEffectType.None;
-    [SerializeField] private float statusEffectDuration = 2f;
-    [SerializeField] private float statusEffectStrength = 1f;
 
     [Header("Aim")]
     public Transform firePoint;
 
     [Header("Effects")]
-    [SerializeField] private ParticleSystem muzzleFlash;
-    [SerializeField] private AudioClip fireSound;
     [SerializeField] private AudioSource audioSource;
 
     private float cooldownTimer;
@@ -65,54 +57,39 @@ public class Cannon : MonoBehaviour
 
     private void Shoot(Transform target)
     {
-        if (projectilePrefab == null)
-        {
-            Debug.LogWarning($"{name}: No projectile prefab assigned!");
-            return;
-        }
-
         if (firePoint == null)
         {
             Debug.LogWarning($"{name}: No fire point assigned!");
             return;
         }
 
+        if (projectileData == null || projectileData.projectilePrefab == null)
+        {
+            Debug.LogWarning($"{name}: No ProjectileDataSO or projectile prefab assigned!");
+            return;
+        }
+
         // Spawn projectile
-        GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        GameObject projectileObj = Instantiate(projectileData.projectilePrefab, firePoint.position, firePoint.rotation);
         Projectile projectile = projectileObj.GetComponent<Projectile>();
 
         if (projectile != null)
         {
-            // Initialize with target
-            if (target != null)
-            {
-                projectile.Initialize(target, projectileDamage);
-            }
-            else
-            {
-                projectile.Initialize(firePoint.position + firePoint.forward * 100f, projectileDamage);
-            }
-
-            // Apply status effect if configured
-            if (statusEffectType != StatusEffectType.None)
-            {
-                projectile.SetStatusEffect(statusEffectType, statusEffectDuration, statusEffectStrength);
-            }
-
-            // Subscribe to hit event (optional)
+            projectile.Initialize(projectileData, target, projectileDamage);
             projectile.OnProjectileHit += Projectile_OnProjectileHit;
         }
 
-        // Play muzzle flash
-        if (muzzleFlash != null)
+        // Muzzle flash from SO
+        if (projectileData.muzzleFlashPrefab != null)
         {
-            muzzleFlash.Play();
+            GameObject muzzle = Instantiate(projectileData.muzzleFlashPrefab, firePoint.position, firePoint.rotation);
+            Destroy(muzzle, 2f);
         }
 
-        // Play fire sound
-        if (audioSource != null && fireSound != null)
+        // Audio from SO
+        if (audioSource != null && projectileData.fireSound != null)
         {
-            audioSource.PlayOneShot(fireSound);
+            audioSource.PlayOneShot(projectileData.fireSound);
         }
     }
 
@@ -123,20 +100,12 @@ public class Cannon : MonoBehaviour
     #region Configuration Methods
 
     /// <summary>
-    /// Set cannon configuration for ability activation
+    /// Set cannon configuration using ProjectileDataSO
     /// </summary>
-    public void SetConfiguration(GameObject newProjectilePrefab, int newDamage,
-        StatusEffectType effectType, float effectDuration, float effectStrength)
+    public void SetConfiguration(ProjectileDataSO newProjectileData, int newDamage)
     {
-        if (newProjectilePrefab != null)
-        {
-            projectilePrefab = newProjectilePrefab;
-        }
-
+        projectileData = newProjectileData;
         projectileDamage = newDamage;
-        statusEffectType = effectType;
-        statusEffectDuration = effectDuration;
-        statusEffectStrength = effectStrength;
     }
 
     /// <summary>
@@ -146,13 +115,8 @@ public class Cannon : MonoBehaviour
     {
         return new CannonConfiguration
         {
-            projectilePrefab = projectilePrefab,
-            projectileDamage = projectileDamage,
-            projectileSpeed = projectileSpeed,
-            statusEffectType = statusEffectType,
-            statusEffectDuration = statusEffectDuration,
-            statusEffectStrength = statusEffectStrength,
-            muzzleFlash = muzzleFlash
+            projectileData = projectileData,
+            projectileDamage = projectileDamage
         };
     }
 
@@ -163,35 +127,8 @@ public class Cannon : MonoBehaviour
     {
         if (config == null) return;
 
-        projectilePrefab = config.projectilePrefab;
+        projectileData = config.projectileData;
         projectileDamage = config.projectileDamage;
-        projectileSpeed = config.projectileSpeed;
-        statusEffectType = config.statusEffectType;
-        statusEffectDuration = config.statusEffectDuration;
-        statusEffectStrength = config.statusEffectStrength;
-
-        if (config.muzzleFlash != null)
-        {
-            muzzleFlash = config.muzzleFlash;
-        }
-    }
-
-    /// <summary>
-    /// Set just the status effect parameters
-    /// </summary>
-    public void SetStatusEffect(StatusEffectType effectType, float duration, float strength)
-    {
-        statusEffectType = effectType;
-        statusEffectDuration = duration;
-        statusEffectStrength = strength;
-    }
-
-    /// <summary>
-    /// Set just the projectile prefab
-    /// </summary>
-    public void SetProjectilePrefab(GameObject prefab)
-    {
-        projectilePrefab = prefab;
     }
 
     /// <summary>
@@ -211,11 +148,19 @@ public class Cannon : MonoBehaviour
     }
 
     /// <summary>
+    /// Set the ProjectileDataSO
+    /// </summary>
+    public void SetProjectileData(ProjectileDataSO data)
+    {
+        projectileData = data;
+    }
+
+    /// <summary>
     /// Check if cannon is properly configured
     /// </summary>
     public bool IsConfigured()
     {
-        return projectilePrefab != null && firePoint != null;
+        return projectileData != null && firePoint != null;
     }
 
     #endregion
@@ -227,11 +172,6 @@ public class Cannon : MonoBehaviour
 [System.Serializable]
 public class CannonConfiguration
 {
-    public GameObject projectilePrefab;
+    public ProjectileDataSO projectileData;
     public int projectileDamage;
-    public float projectileSpeed;
-    public StatusEffectType statusEffectType;
-    public float statusEffectDuration;
-    public float statusEffectStrength;
-    public ParticleSystem muzzleFlash;
 }

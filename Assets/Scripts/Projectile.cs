@@ -73,6 +73,45 @@ public class Projectile : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Initialize from a ProjectileDataSO — applies all movement, VFX, and status effect settings from data.
+    /// </summary>
+    public void Initialize(ProjectileDataSO data, Transform target, int damage)
+    {
+        // Apply movement settings from SO
+        projectileType = data.projectileType;
+        speed = data.speed;
+        lifetime = data.lifetime;
+        homingStrength = data.homingStrength;
+        homingDelay = data.homingDelay;
+        arcHeight = data.arcHeight;
+
+        // Apply status effect from SO
+        statusEffectType = data.statusEffect;
+        statusEffectDuration = data.effectDuration;
+        statusEffectStrength = data.effectStrength;
+
+        // Apply VFX from SO
+        if (data.impactEffectPrefab != null)
+        {
+            impactEffect = data.impactEffectPrefab;
+        }
+
+        // Spawn trail as child if provided
+        if (data.trailPrefab != null)
+        {
+            GameObject trailObj = Instantiate(data.trailPrefab, transform.position, transform.rotation, transform);
+            trailObj.transform.localPosition = Vector3.zero;
+            trailObj.transform.localRotation = Quaternion.identity;
+        }
+
+        // Reset life timer with new lifetime
+        lifeTimer = lifetime;
+
+        // Standard target setup
+        Initialize(target, damage);
+    }
+
     public void Initialize(Transform target, int damage)
     {
         this.target = target;

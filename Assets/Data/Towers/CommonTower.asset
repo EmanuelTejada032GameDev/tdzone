@@ -22,6 +22,7 @@ MonoBehaviour:
   range: 15
   cannonCount: 1
   towerVisualPrefab: {fileID: 2675972904533289035, guid: 8e7075b98f9f42042be72b72311d1147, type: 3}
+  projectileData: {fileID: 11400000, guid: fc6846770409039479256680700bbcdd, type: 2}
   projectilePrefab: {fileID: 6302814833152823475, guid: ba6ae69a84a33b64882d1eba2339cdde, type: 3}
   projectileColor: {r: 0.4862478, g: 0.8301887, b: 0.43467426, a: 1}
   muzzleEffectPrefab: {fileID: 1214518620239540666, guid: 8ae4c1d4808d7f34c9a6a509e220a6f9, type: 3}

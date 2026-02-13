@@ -350,27 +350,12 @@ public class TowerAbilityManager : MonoBehaviour
     private void ApplyCannonConfiguration(TowerDataSO towerData)
     {
         int modifiedDamage = (int)TowerStatCalculator.GetModifiedDamage(towerData.damage);
-        float modifiedEffectDuration = towerData.effectDuration;
-        float modifiedEffectStrength = towerData.effectStrength;
-
-        // Apply burn skill modifiers for burn-type towers
-        if (towerData.statusEffect == StatusEffectType.Burn)
-        {
-            modifiedEffectDuration = TowerStatCalculator.GetModifiedBurnDuration(towerData.effectDuration);
-            modifiedEffectStrength = TowerStatCalculator.GetModifiedBurnDamage(towerData.effectStrength);
-        }
 
         foreach (var cannon in cannons)
         {
             if (cannon == null) continue;
 
-            cannon.SetConfiguration(
-                towerData.projectilePrefab,
-                modifiedDamage,
-                towerData.statusEffect,
-                modifiedEffectDuration,
-                modifiedEffectStrength
-            );
+            cannon.SetConfiguration(towerData.projectileData, modifiedDamage);
         }
     }
 
