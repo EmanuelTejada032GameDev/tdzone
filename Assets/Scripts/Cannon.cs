@@ -11,6 +11,7 @@ public class Cannon : MonoBehaviour
     [Header("Projectile")]
     [SerializeField] private ProjectileDataSO projectileData;
     [SerializeField] private int projectileDamage;
+    [SerializeField] private FiringMode firingMode = FiringMode.Projectile;
 
     [Header("Aim")]
     public Transform firePoint;
@@ -36,6 +37,7 @@ public class Cannon : MonoBehaviour
 
     public void TryFire(Transform target)
     {
+        if (firingMode == FiringMode.Continuous) return;
         if (cooldownTimer > 0f) return;
         if (isFiring) return;
 
@@ -116,7 +118,9 @@ public class Cannon : MonoBehaviour
         return new CannonConfiguration
         {
             projectileData = projectileData,
-            projectileDamage = projectileDamage
+            projectileDamage = projectileDamage,
+            firingMode = firingMode,
+            cooldown = cooldown
         };
     }
 
@@ -129,6 +133,8 @@ public class Cannon : MonoBehaviour
 
         projectileData = config.projectileData;
         projectileDamage = config.projectileDamage;
+        firingMode = config.firingMode;
+        cooldown = config.cooldown;
     }
 
     /// <summary>
@@ -156,6 +162,14 @@ public class Cannon : MonoBehaviour
     }
 
     /// <summary>
+    /// Set the firing mode (Projectile or Continuous)
+    /// </summary>
+    public void SetFiringMode(FiringMode mode)
+    {
+        firingMode = mode;
+    }
+
+    /// <summary>
     /// Check if cannon is properly configured
     /// </summary>
     public bool IsConfigured()
@@ -174,4 +188,6 @@ public class CannonConfiguration
 {
     public ProjectileDataSO projectileData;
     public int projectileDamage;
+    public FiringMode firingMode;
+    public float cooldown;
 }

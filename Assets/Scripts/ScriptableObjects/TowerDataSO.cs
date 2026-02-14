@@ -15,15 +15,29 @@ public class TowerDataSO : ScriptableObject
     public float damage = 10f;
     public float fireRate = 1f;
     public float range = 15f;
+    public float detectionRange = 20f;
     public int cannonCount = 1;
 
     [Header("Visuals")]
     [Tooltip("Prefab to swap when this tower is active. If null, uses default tower visual.")]
     public GameObject towerVisualPrefab;
 
-    [Header("Projectile")]
-    [Tooltip("ProjectileDataSO for this tower type")]
+    [Header("Firing")]
+    public FiringMode firingMode = FiringMode.Projectile;
+
+    [Header("Projectile Mode")]
+    [Tooltip("Used when firingMode = Projectile")]
     public ProjectileDataSO projectileData;
+
+    [Header("Continuous Mode")]
+    [Tooltip("Used when firingMode = Continuous (e.g. FlameThrower-Red.prefab)")]
+    public GameObject continuousEffectPrefab;
+    public float continuousDamagePerSecond = 5f;
+    public float continuousRange = 8f;
+    public float continuousConeAngle = 30f;
+    public StatusEffectType continuousStatusEffect = StatusEffectType.None;
+    public float continuousEffectDuration = 2f;
+    public float continuousEffectStrength = 1f;
 
     [Header("Ability Settings (for unlockable towers)")]
     [Tooltip("How long the ability lasts when activated")]

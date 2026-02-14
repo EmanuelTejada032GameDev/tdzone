@@ -396,7 +396,7 @@ MonoBehaviour:
   victoryBonusMultiplier: 1.5
   debugMode: 0
   progressionData:
-    currency: 2000
+    currency: 12000
     unlockedTowerIds: []
     towerLevels:
       keys: []

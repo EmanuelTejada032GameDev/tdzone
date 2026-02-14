@@ -11,6 +11,7 @@ public class TowerAbilityManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private TowerDatabaseSO towerDatabase;
     [SerializeField] private TowerVisualSwapper visualSwapper;
+    [SerializeField] private Tower tower;
     [SerializeField] private Cannon[] cannons;
 
     [Header("Base Tower")]
@@ -25,6 +26,9 @@ public class TowerAbilityManager : MonoBehaviour
 
     // Original cannon configurations (to restore when ability ends)
     private CannonConfiguration[] originalCannonConfigs;
+
+    // Continuous fire mode
+    private ContinuousDamageZone activeDamageZone;
 
     // Events
     public event Action<TowerDataSO> OnTowerTypeChanged;
@@ -43,6 +47,12 @@ public class TowerAbilityManager : MonoBehaviour
     {
         // Reset runtime state
         activeAbility = null;
+
+        // Get tower if not assigned
+        if (tower == null)
+        {
+            tower = GetComponent<Tower>();
+        }
 
         // Get cannons if not assigned
         if (cannons == null || cannons.Length == 0)
@@ -104,7 +114,7 @@ public class TowerAbilityManager : MonoBehaviour
         }
 
         currentTowerData = baseTowerData;
-        ApplyCannonConfiguration(baseTowerData);
+        ApplyTowerConfiguration(baseTowerData);
 
     }
 
@@ -318,7 +328,13 @@ public class TowerAbilityManager : MonoBehaviour
         }
 
         // Apply cannon configuration
-        ApplyCannonConfiguration(towerData);
+        ApplyTowerConfiguration(towerData);
+
+        // Handle continuous fire mode (e.g. Flamethrower)
+        if (towerData.firingMode == FiringMode.Continuous)
+        {
+            ActivateContinuousFire(towerData);
+        }
 
         OnTowerTypeChanged?.Invoke(towerData);
 
@@ -337,8 +353,17 @@ public class TowerAbilityManager : MonoBehaviour
             visualSwapper.RevertToDefault();
         }
 
+        // Deactivate continuous fire if active
+        DeactivateContinuousFire();
+
         // Restore original cannon configuration
         RestoreOriginalCannonConfigs();
+
+        // Restore original Tower stats (fireCooldown, maxShootingRange)
+        if (tower != null)
+        {
+            tower.RestoreOriginalStats();
+        }
 
         OnTowerTypeChanged?.Invoke(baseTowerData);
 
@@ -347,15 +372,71 @@ public class TowerAbilityManager : MonoBehaviour
     /// <summary>
     /// Apply tower data configuration to all cannons, routing stats through TowerStatCalculator.
     /// </summary>
-    private void ApplyCannonConfiguration(TowerDataSO towerData)
+    private void ApplyTowerConfiguration(TowerDataSO towerData)
     {
         int modifiedDamage = (int)TowerStatCalculator.GetModifiedDamage(towerData.damage);
 
+        float modifiedFireRate = TowerStatCalculator.GetModifiedFireRate(towerData.fireRate);
+        float modifiedRange = TowerStatCalculator.GetModifiedRange(towerData.range);
+        float cooldown = 1f / modifiedFireRate;
+
+        // Apply projectile data and cooldown to cannons
         foreach (var cannon in cannons)
         {
             if (cannon == null) continue;
 
             cannon.SetConfiguration(towerData.projectileData, modifiedDamage);
+            cannon.SetFiringMode(towerData.firingMode);
+            cannon.cooldown = cooldown;
+        }
+
+        // Apply fireRate, range, and detection to Tower
+        if (tower != null)
+        {
+            tower.SetFireCooldown(cooldown);
+            tower.SetShootingRange(modifiedRange);
+            tower.SetDetectionRadius(towerData.detectionRange);
+        }
+    }
+
+    /// <summary>
+    /// Activate continuous damage zone on the first cannon's fire point.
+    /// </summary>
+    private void ActivateContinuousFire(TowerDataSO towerData)
+    {
+        DeactivateContinuousFire();
+
+        // Use the first cannon's fire point
+        Transform firePoint = null;
+        foreach (var cannon in cannons)
+        {
+            if (cannon != null && cannon.firePoint != null)
+            {
+                firePoint = cannon.firePoint;
+                break;
+            }
+        }
+
+        if (firePoint == null)
+        {
+            Debug.LogWarning("TowerAbilityManager: No fire point found for continuous fire!");
+            return;
+        }
+
+        activeDamageZone = gameObject.AddComponent<ContinuousDamageZone>();
+        activeDamageZone.Activate(towerData, firePoint);
+    }
+
+    /// <summary>
+    /// Deactivate and remove continuous damage zone.
+    /// </summary>
+    private void DeactivateContinuousFire()
+    {
+        if (activeDamageZone != null)
+        {
+            activeDamageZone.Deactivate();
+            Destroy(activeDamageZone);
+            activeDamageZone = null;
         }
     }
 

@@ -47,6 +47,11 @@ public class Tower : MonoBehaviour
 
     private float fireTimer;
 
+    // Original values for restoration after ability ends
+    private float originalFireCooldown;
+    private float originalMaxShootingRange;
+    private float originalDetectionRadius;
+
     private void Awake()
     {
         if (HealthSystem is null)
@@ -61,6 +66,11 @@ public class Tower : MonoBehaviour
         }
 
         mainCamera = Camera.main;
+
+        // Store original values for ability restore
+        originalFireCooldown = fireCooldown;
+        originalMaxShootingRange = maxShootingRange;
+        originalDetectionRadius = detectionRadius;
     }
 
     private void OnEnable()
@@ -339,6 +349,30 @@ public class Tower : MonoBehaviour
         }
 
         fireTimer = fireCooldown;
+    }
+
+    // ============= CONFIGURATION METHODS =============
+
+    public void SetFireCooldown(float cooldown)
+    {
+        fireCooldown = cooldown;
+    }
+
+    public void SetShootingRange(float range)
+    {
+        maxShootingRange = range;
+    }
+
+    public void SetDetectionRadius(float radius)
+    {
+        detectionRadius = radius;
+    }
+
+    public void RestoreOriginalStats()
+    {
+        fireCooldown = originalFireCooldown;
+        maxShootingRange = originalMaxShootingRange;
+        detectionRadius = originalDetectionRadius;
     }
 
     // ============= GIZMO VISUALIZATION =============
