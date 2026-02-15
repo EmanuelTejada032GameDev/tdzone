@@ -25,14 +25,14 @@ MonoBehaviour:
   towerVisualPrefab: {fileID: 6828303032687447462, guid: bb75fdf901d7817409bf5fd6a636cab9, type: 3}
   firingMode: 1
   projectileData: {fileID: 0}
-  continuousEffectPrefab: {fileID: 7218889025624974677, guid: c742f3245ad3ce844925398d751ae745, type: 3}
+  continuousEffectPrefab: {fileID: 8366458749314064891, guid: c9e6b8dd422725d4b88d64034b3c843e, type: 3}
   continuousDamagePerSecond: 5
   continuousRange: 8
-  continuousConeAngle: 30
+  continuousConeAngle: 11
   continuousStatusEffect: 1
   continuousEffectDuration: 2
   continuousEffectStrength: 1
-  abilityDuration: 40
+  abilityDuration: 30
   abilityCooldown: 30
   nextLevel: {fileID: 0}
   upgradeLevel: 1

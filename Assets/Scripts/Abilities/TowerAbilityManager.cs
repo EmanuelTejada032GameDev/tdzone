@@ -66,9 +66,6 @@ public class TowerAbilityManager : MonoBehaviour
             visualSwapper = GetComponent<TowerVisualSwapper>();
         }
 
-        // Store original cannon configurations
-        StoreOriginalCannonConfigs();
-
         // Set initial tower data
         if (baseTowerData == null && towerDatabase != null)
         {
@@ -100,6 +97,10 @@ public class TowerAbilityManager : MonoBehaviour
 
         // Apply base tower configuration on start
         ApplyBaseTowerConfiguration();
+
+        // Store original cannon configurations AFTER base config is applied
+        // so the backup includes the correct projectileData
+        StoreOriginalCannonConfigs();
     }
 
     /// <summary>
@@ -424,7 +425,7 @@ public class TowerAbilityManager : MonoBehaviour
         }
 
         activeDamageZone = gameObject.AddComponent<ContinuousDamageZone>();
-        activeDamageZone.Activate(towerData, firePoint);
+        activeDamageZone.Activate(towerData, firePoint, tower);
     }
 
     /// <summary>

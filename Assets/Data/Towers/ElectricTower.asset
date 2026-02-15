@@ -20,14 +20,18 @@ MonoBehaviour:
   damage: 25
   fireRate: 0.4
   range: 15
+  detectionRange: 20
   cannonCount: 1
   towerVisualPrefab: {fileID: 2054862036942762674, guid: fee9a6e3813b7154bba2f1d7a7dab71d, type: 3}
-  projectilePrefab: {fileID: 6302814833152823475, guid: ba6ae69a84a33b64882d1eba2339cdde, type: 3}
-  projectileColor: {r: 0.4672481, g: 0.9433962, b: 0.92941046, a: 1}
-  muzzleEffectPrefab: {fileID: 1214518620239540666, guid: 8ae4c1d4808d7f34c9a6a509e220a6f9, type: 3}
-  statusEffect: 3
-  effectDuration: 2
-  effectStrength: 1
+  firingMode: 0
+  projectileData: {fileID: 0}
+  continuousEffectPrefab: {fileID: 0}
+  continuousDamagePerSecond: 5
+  continuousRange: 8
+  continuousConeAngle: 30
+  continuousStatusEffect: 0
+  continuousEffectDuration: 2
+  continuousEffectStrength: 1
   abilityDuration: 10
   abilityCooldown: 30
   nextLevel: {fileID: 0}

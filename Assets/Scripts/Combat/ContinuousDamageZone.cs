@@ -4,6 +4,7 @@ using System.Collections;
 /// <summary>
 /// Handles continuous area damage for the flamethrower firing mode.
 /// Created and managed by TowerAbilityManager when a Continuous tower type activates.
+/// Target-aware: only fires (particle + damage) when the tower has a valid target.
 /// </summary>
 public class ContinuousDamageZone : MonoBehaviour
 {
@@ -17,17 +18,22 @@ public class ContinuousDamageZone : MonoBehaviour
 
     private Transform firePoint;
     private GameObject activeEffect;
+    private ParticleSystem[] effectParticles;
     private Coroutine damageCoroutine;
     private bool isActive;
+    private bool isFiring;
+
+    private Tower tower;
 
     /// <summary>
     /// Activate the continuous damage zone with settings from TowerDataSO.
     /// </summary>
-    public void Activate(TowerDataSO data, Transform firePoint)
+    public void Activate(TowerDataSO data, Transform firePoint, Tower tower)
     {
         if (isActive) return;
 
         this.firePoint = firePoint;
+        this.tower = tower;
         damagePerSecond = data.continuousDamagePerSecond;
         range = data.continuousRange;
         coneAngle = data.continuousConeAngle;
@@ -35,15 +41,19 @@ public class ContinuousDamageZone : MonoBehaviour
         effectDuration = data.continuousEffectDuration;
         effectStrength = data.continuousEffectStrength;
 
-        // Spawn the particle effect as child of fire point
+        // Spawn the particle effect as child of fire point (starts stopped)
         if (data.continuousEffectPrefab != null)
         {
             activeEffect = Instantiate(data.continuousEffectPrefab, firePoint.position, firePoint.rotation, firePoint);
             activeEffect.transform.localPosition = Vector3.zero;
             activeEffect.transform.localRotation = Quaternion.identity;
+
+            effectParticles = activeEffect.GetComponentsInChildren<ParticleSystem>();
+            StopParticles();
         }
 
         isActive = true;
+        isFiring = false;
         damageCoroutine = StartCoroutine(DamageTickRoutine());
     }
 
@@ -55,6 +65,7 @@ public class ContinuousDamageZone : MonoBehaviour
         if (!isActive) return;
 
         isActive = false;
+        isFiring = false;
 
         if (damageCoroutine != null)
         {
@@ -67,13 +78,57 @@ public class ContinuousDamageZone : MonoBehaviour
             Destroy(activeEffect);
             activeEffect = null;
         }
+
+        effectParticles = null;
+    }
+
+    private bool HasValidTarget()
+    {
+        return tower != null && tower.CurrentTarget != null;
+    }
+
+    private void StartParticles()
+    {
+        if (effectParticles == null) return;
+        foreach (var ps in effectParticles)
+        {
+            if (!ps.isPlaying) ps.Play();
+        }
+    }
+
+    private void StopParticles()
+    {
+        if (effectParticles == null) return;
+        foreach (var ps in effectParticles)
+        {
+            if (ps.isPlaying) ps.Stop();
+        }
     }
 
     private IEnumerator DamageTickRoutine()
     {
         while (isActive)
         {
-            DamageTick();
+            bool shouldFire = HasValidTarget();
+
+            // Transition: start firing
+            if (shouldFire && !isFiring)
+            {
+                isFiring = true;
+                StartParticles();
+            }
+            // Transition: stop firing
+            else if (!shouldFire && isFiring)
+            {
+                isFiring = false;
+                StopParticles();
+            }
+
+            if (isFiring)
+            {
+                DamageTick();
+            }
+
             yield return new WaitForSeconds(tickRate);
         }
     }

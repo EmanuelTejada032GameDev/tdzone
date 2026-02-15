@@ -10,6 +10,7 @@ public class Tower : MonoBehaviour
 
     [Header("Target")]
     [SerializeField] private Transform currentTarget;
+    public Transform CurrentTarget => currentTarget;
 
     [Header("Aiming")]
     [SerializeField] private float aimLockAngle = 5f;
