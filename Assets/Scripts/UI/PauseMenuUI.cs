@@ -48,7 +48,11 @@ public class PauseMenuUI : MonoBehaviour
     private void PauseGame()
     {
         isPaused = true;
-        Time.timeScale = 0f;
+
+        if (TimeControlUI.Instance != null)
+            TimeControlUI.Instance.Pause();
+        else
+            Time.timeScale = 0f;
 
         if (pausePanel != null)
         {
@@ -59,7 +63,11 @@ public class PauseMenuUI : MonoBehaviour
     public void ResumeGame()
     {
         isPaused = false;
-        Time.timeScale = 1f;
+
+        if (TimeControlUI.Instance != null)
+            TimeControlUI.Instance.Unpause();
+        else
+            Time.timeScale = 1f;
 
         if (pausePanel != null)
         {
